@@ -8,7 +8,7 @@ from django.contrib.auth.models import Permission
 
 #USERS
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name', 'email', 'address', 'image', 'display_orders', 'role')
+    list_display = ('id','username', 'first_name', 'last_name', 'email', 'address', 'image', 'display_orders', 'role')
     filter_horizontal = ('user_permissions',)
     def display_orders(self, obj):
         return ", ".join([str(order.id_order) for order in obj.orders.all()])
