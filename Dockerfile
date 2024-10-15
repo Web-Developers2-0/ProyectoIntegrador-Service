@@ -23,6 +23,9 @@ RUN pip install psycopg2-binary
 RUN python manage.py collectstatic --noinput
 
 # Ejecuta las migraciones automáticamente
+RUN python manage.py makemigrations
+
+# Ejecuta las migraciones automáticamente
 RUN python manage.py migrate
 
 # Expone el puerto de la aplicación
