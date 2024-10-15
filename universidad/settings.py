@@ -5,7 +5,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 
-
 load_dotenv()
 
 # Ruta base del proyecto
@@ -26,7 +25,7 @@ if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
     
-    
+
 AUTH_USER_MODEL = 'MyComicApp.User'
 
 LOGGING = {
@@ -104,7 +103,15 @@ TEMPLATES = [
 
 # Database
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL')) 
+    'default': {
+        'default': dj_database_url.config(default=os.getenv('DATABASE_URL')),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
+    }
 }
 
 # Password validation
