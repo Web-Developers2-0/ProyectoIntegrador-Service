@@ -19,19 +19,20 @@ def load_data_script(sender, **kwargs):
     with connection.cursor() as cursor:
         for table in affected_tables:
             try:
-                cursor.execute(f"SELECT COUNT(*) FROM {table}")
-                count = cursor.fetchone()[0]
-                if count == 0:
-                    # Leer datos específicos para la tabla
-                    with open(sql_file_path, 'r') as file:
-                        sql = file.read()
-                        # Extraer solo los datos relevantes para la tabla actual
-                        table_data = extract_table_data(sql, table)
-                        if table_data:
-                            cursor.execute(table_data)
-                            print(f'Successfully loaded data for table {table}')
+                # Vaciar la tabla antes de cargar los datos
+                cursor.execute(f"TRUNCATE TABLE {table} RESTART IDENTITY CASCADE")
+                print(f'Table {table} truncated')
+
+                # Leer datos específicos para la tabla
+                with open(sql_file_path, 'r') as file:
+                    sql = file.read()
+                    # Extraer solo los datos relevantes para la tabla actual
+                    table_data = extract_table_data(sql, table)
+                    if table_data:
+                        cursor.execute(table_data)
+                        print(f'Successfully loaded data for table {table}')
             except Exception as e:
-                print(f"Skipping table {table} because it does not exist yet: {e}")
+                print(f"Skipping table {table} due to error: {e}")
                 continue
 
 def extract_table_data(sql, table):
@@ -43,7 +44,12 @@ def extract_table_data(sql, table):
     table_data = []
 
     for statement in sql_statements:
+        # Ignorar comentarios y sentencias vacías
+        statement = statement.strip()
+        if not statement or statement.startswith('--'):
+            continue
+        # Agregar las sentencias que contienen el nombre de la tabla
         if table in statement:
-            table_data.append(statement.strip())
+            table_data.append(statement)
 
     return ';\n'.join(table_data) + ';' if table_data else None
