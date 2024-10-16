@@ -91,7 +91,7 @@ class Product(models.Model):
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     isbn = models.CharField(max_length=45, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    calification = models.IntegerField(blank=True, null=True)
+    calification = models.FloatField(blank=True, null=True)
     
     class Meta: 
         db_table = 'products'
