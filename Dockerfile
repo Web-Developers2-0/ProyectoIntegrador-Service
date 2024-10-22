@@ -22,6 +22,9 @@ RUN pip install psycopg2-binary
 # Comando para recopilar archivos estáticos
 RUN python manage.py collectstatic --noinput
 
+# Genera las migraciones automáticamente
+RUN python manage.py makemigrations
+
 # Ejecuta las migraciones automáticamente
 RUN python manage.py migrate
 
